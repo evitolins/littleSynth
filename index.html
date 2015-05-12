@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <h1>littleSynth Demo</h1>
+    <button id='btn1'>Play Single Tone</button>
+    <button id='btn2'>Play Sequence</button>
+    
+    <script src="js/Oscillator.js"></script>
+    <script>
+    var ctx = new AudioContext();
+    var notes = [
+        new Oscillator(ctx, 55, 'sine'),
+        new Oscillator(ctx, 110, 'sine'),
+        new Oscillator(ctx, 220, 'sine'),
+        new Oscillator(ctx, 440, 'sine'),
+        new Oscillator(ctx, 880, 'sine'),
+        new Oscillator(ctx, 1760, 'sine')
+    ];
+    var sequencer = function (sequence, notes) {
+        var timePassed = 0;
+        var i, note, delay;
+        for (i=0; i<sequence.length; i++) {
+            note = sequence[i][0];
+            delay = sequence[i][1];
+            notes[note].pulse(timePassed, delay);
+            timePassed = timePassed + delay;
+        };
+    };
+
+    var sound_tone = function () {
+      var sequence = [
+          [2, 1000]
+      ];
+      sequencer(sequence, notes);
+    };
+
+    var sound_sequence = function () {
+      var sequence = [
+        [0, 80],
+        [1, 80],
+        [2, 80],
+        [3, 80],
+        [4, 80],
+        [3, 80],
+        [2, 80],
+        [1, 80],
+        [0, 80]
+      ];
+      sequencer(sequence, notes);
+    };
+
+    // Gather Elements
+    var elem = {
+        btn1 : document.getElementById('btn1'),
+        btn2 : document.getElementById('btn2')
+    };
+
+    // Bind Elements
+    btn1.addEventListener('click', function(){
+        sound_tone();
+    });
+    btn2.addEventListener('click', function(){
+        sound_sequence();
+    });
+    </script>
+</body>
+</html>
