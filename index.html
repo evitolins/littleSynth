@@ -14,7 +14,7 @@
     <script src="js/Oscillator.js"></script>
     <script>
     var ctx = new AudioContext();
-    var notes = [
+    var scale = [
         new Oscillator(ctx, 55, 'sine'),
         new Oscillator(ctx, 110, 'sine'),
         new Oscillator(ctx, 220, 'sine'),
@@ -22,13 +22,13 @@
         new Oscillator(ctx, 880, 'sine'),
         new Oscillator(ctx, 1760, 'sine')
     ];
-    var sequencer = function (sequence, notes) {
+    var sequencer = function (sequence, scale) {
         var timePassed = 0;
         var i, note, delay;
         for (i=0; i<sequence.length; i++) {
             note = sequence[i][0];
             delay = sequence[i][1];
-            notes[note].pulse(timePassed, delay);
+            scale[note].pulse(timePassed, delay);
             timePassed = timePassed + delay;
         };
     };
@@ -37,7 +37,7 @@
       var sequence = [
           [2, 1000]
       ];
-      sequencer(sequence, notes);
+      sequencer(sequence, scale);
     };
 
     var sound_sequence = function () {
@@ -52,7 +52,7 @@
         [1, 80],
         [0, 80]
       ];
-      sequencer(sequence, notes);
+      sequencer(sequence, scale);
     };
 
     // Gather Elements
