@@ -5,7 +5,7 @@ var Oscillator = function (ctx, freq, type) {
     this.osc = this.ctx.createOscillator();
     this.osc.type = type || 'sine';
     this.osc.frequency.value = freq || 440;
-    this.osc.start();
+    this.osc.start(0);
     this.volume = this.ctx.createGain();
     this.volume.gain.value = 0;
     this.osc.connect(this.volume);
