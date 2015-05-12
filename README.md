@@ -2,12 +2,21 @@ littleSynth
 ===============================================================================
 Create sounds and music using the HTML5 WebAudio API.
 
-Pure javascript, with no dependencies.  Only requires a modern browser.
+
+Getting Started
+---------------
+__Immediately play 440hz "A" for 1 second__
+
+```javascript
+var ctx = new AudioContext();
+var osc = new Oscillator(ctx, 444);
+osc.pulse(0, 1000);
+```
 
 
 Classes
 -------
-__Oscillator__
+__Oscillator (ctx, freq, type)__
 
 - setFreq (freq)
 - setType (type)
