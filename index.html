@@ -14,6 +14,13 @@
     <script src="js/Oscillator.js"></script>
     <script src="js/Sequencer.js"></script>
     <script>
+
+    // AudioContext Shim
+    window.AudioContext = (function(){
+      return  window.AudioContext ||
+              window.webkitAudioContext;
+    })();
+
     var ctx = new AudioContext();
     var sq = new Sequencer(ctx);
 
