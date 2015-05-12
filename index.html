@@ -12,36 +12,23 @@
     <button id='btn2'>Play Sequence</button>
     
     <script src="js/Oscillator.js"></script>
+    <script src="js/Sequencer.js"></script>
     <script>
     var ctx = new AudioContext();
-    var scale = [
-        new Oscillator(ctx, 55, 'sine'),
-        new Oscillator(ctx, 110, 'sine'),
-        new Oscillator(ctx, 220, 'sine'),
-        new Oscillator(ctx, 440, 'sine'),
-        new Oscillator(ctx, 880, 'sine'),
-        new Oscillator(ctx, 1760, 'sine')
+    var sq = new Sequencer(ctx);
+
+    // Create scale
+    sq.addOscillator(55, 'sine');
+    sq.addOscillator(110, 'sine');
+    sq.addOscillator(220, 'sine');
+    sq.addOscillator(440, 'sine');
+    sq.addOscillator(880, 'sine');
+    sq.addOscillator(1760, 'sine');
+
+    var sequenceA = [
+        [2, 1000]
     ];
-    var sequencer = function (sequence, scale) {
-        var timePassed = 0;
-        var i, note, delay;
-        for (i=0; i<sequence.length; i++) {
-            note = sequence[i][0];
-            delay = sequence[i][1];
-            scale[note].pulse(timePassed, delay);
-            timePassed = timePassed + delay;
-        };
-    };
-
-    var sound_tone = function () {
-      var sequence = [
-          [2, 1000]
-      ];
-      sequencer(sequence, scale);
-    };
-
-    var sound_sequence = function () {
-      var sequence = [
+    var sequenceB = [
         [0, 80],
         [1, 80],
         [2, 80],
@@ -51,9 +38,7 @@
         [2, 80],
         [1, 80],
         [0, 80]
-      ];
-      sequencer(sequence, scale);
-    };
+    ];
 
     // Gather Elements
     var elem = {
@@ -63,10 +48,10 @@
 
     // Bind Elements
     btn1.addEventListener('click', function(){
-        sound_tone();
+        sq.play(sequenceA);
     });
     btn2.addEventListener('click', function(){
-        sound_sequence();
+        sq.play(sequenceB);
     });
     </script>
 </body>
