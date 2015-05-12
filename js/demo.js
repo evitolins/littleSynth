@@ -47,7 +47,6 @@ elem.btn2.addEventListener('click', function(){
 });
 elem.btn3.addEventListener('click', function(){
     var customSequence = JSON.parse(elem.txt1.value);
-    console.log(customSequence);
     sq.play(customSequence);
 });
 
