@@ -29,10 +29,9 @@ Oscillator.prototype.stop = function () {
 };
 
 Oscillator.prototype.pulse = function(start, length) {
-    var self = this,
-        wait = start || 0;
+    var self = this;
     setTimeout(function(){
         self.play();
         setTimeout(function(){self.stop();}, length || 100);
-    }, wait);
+    }, start || 0);
 };
