@@ -1,7 +1,6 @@
 littleSynth
 ===============================================================================
-A set of simple classes to create sounds and music using the HTML5 WebAudio
-API.
+Create sounds and music using the HTML5 WebAudio API.
 
 Pure javascript, with no dependencies.  Only requires a modern browser.
 
