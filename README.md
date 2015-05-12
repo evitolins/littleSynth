@@ -9,7 +9,7 @@ __Immediately play 440hz "A" for 1 second__
 
 ```javascript
 var ctx = new AudioContext();
-var osc = new Oscillator(ctx, 444);
+var osc = new Oscillator(ctx, 440);
 osc.pulse(0, 1000);
 ```
 
