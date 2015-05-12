@@ -8,8 +8,15 @@
 </head>
 <body>
     <h1>littleSynth Demo</h1>
+    <h2>Basic</h2>
     <button id='btn1'>Play Single Tone</button>
     <button id='btn2'>Play Sequence</button>
+    <br />
+
+    <h2>Custom Sequence <span style="font-size:0.7em;">[[noteIdx, milliseconds], ...]</span></h2>
+    <textarea id='txt1' rows="50"></textarea>
+    <br />
+    <button id='btn3'>Play Custom</button>
     
     <script src="js/Oscillator.js"></script>
     <script src="js/Sequencer.js"></script>
@@ -50,7 +57,9 @@
     // Gather Elements
     var elem = {
         btn1 : document.getElementById('btn1'),
-        btn2 : document.getElementById('btn2')
+        btn2 : document.getElementById('btn2'),
+        btn3 : document.getElementById('btn3'),
+        txt1 : document.getElementById('txt1')
     };
 
     // Bind Elements
@@ -60,6 +69,15 @@
     btn2.addEventListener('click', function(){
         sq.play(sequenceB);
     });
+    btn3.addEventListener('click', function(){
+        var customSequence = JSON.parse(txt1.value);
+        console.log(customSequence);
+        sq.play(customSequence);
+    });
+
+    // Add Default Sequence to textarea
+    txt1.value = JSON.stringify(sequenceB, null, 4);
+
     </script>
 </body>
 </html>
