@@ -57,3 +57,7 @@ it's defined scale.
 - http://blog.chrislowis.co.uk/2013/06/05/playing-notes-web-audio-api.html
 - http://www.html5rocks.com/en/tutorials/webaudio/intro/
 - https://github.com/pendragon-andyh/WebAudio-PulseOscillator
+- https://github.com/kevincennis/TinyMusic
+- https://github.com/stewdio/beep.js
+- https://github.com/gregjopa/music.js
+- https://gist.github.com/stuartmemo/3766449
