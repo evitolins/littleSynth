@@ -50,8 +50,8 @@ it's defined scale.
 - play (sequence)
 
 Using `addOscillator`, you can build your own custom scale of notes.  This method
-essentially pushes an Oscillator instance of specified settings to the Sequecner
-instance's internal chord array.
+essentially pushes an Oscillator instance of specified settings to the Sequencer's
+internal chord array.
 
 > This is sorta messy, and will probably be reworked in future versions.
 
