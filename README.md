@@ -49,6 +49,25 @@ it's defined scale.
 - addOscillator (freq, type)
 - play (sequence)
 
+Using `addOscillator`, you can build your own custom scale of notes.  This method
+essentially pushes an Oscillator instance of specified settings to the Sequecner
+instance's internal chord array.
+
+> This is sorta messy, and will probably be reworked in future versions.
+
+Sequences are built with a simple, multi-dimensional array.  Each step consists
+of 2 indexes `[note, duration]`.  The sequencer also supports chords by supplying
+an array of notes in the first index `[[note, note, note], duration]`.
+
+The following example plays a single note using the first oscillator, for 500ms.
+Then plays a 3 note chord for 1s.
+
+```
+[
+    [0, 500],
+    [[0, 2, 4], 1000]
+]
+```
 
 
 ### References
@@ -61,3 +80,4 @@ it's defined scale.
 - https://github.com/stewdio/beep.js
 - https://github.com/gregjopa/music.js
 - https://gist.github.com/stuartmemo/3766449
+- https://github.com/janesconference/nu.js/blob/master/nu.js
