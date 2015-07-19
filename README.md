@@ -1,6 +1,12 @@
 littleSynth
 ===============================================================================
+<img align="right" height="200" src="http://www.clker.com/cliparts/4/c/d/h/M/G/lightbulb-inventor.svg">
+
 Create sounds and music using the HTML5 WebAudio API.
+
+> Demos 
+- Play a single tone (coming soon)
+- Play a tone sequence (coming soon)
 
 
 Getting Started
