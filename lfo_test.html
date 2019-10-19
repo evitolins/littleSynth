@@ -7,68 +7,240 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>lfo test</title>
     <link rel="stylesheet" href="">
+    <style type="text/css">
+body {
+	background: rgb(10,10,10);
+}
+table {
+	width: 100%;
+}
+input[type=range].slider {
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 0px 0;
+  background: transparent;
+}
+input[type=range].slider:focus {
+  outline: none;
+}
+input[type=range].slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 20px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #484d4d;
+  border-radius: 25px;
+  border: 0px solid #010101;
+}
+input[type=range].slider::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #670000, 0px 0px 0px #810000;
+  border: 1px solid #484d4d;
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
+  background: rgba(255, 67, 95, 0.93);
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 0px;
+}
+input[type=range].slider:focus::-webkit-slider-runnable-track {
+  background: #5e6565;
+}
+input[type=range].slider::-moz-range-track {
+  width: 100%;
+  height: 20px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #484d4d;
+  border-radius: 25px;
+  border: 0px solid #010101;
+}
+input[type=range].slider::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #670000, 0px 0px 0px #810000;
+  border: 1px solid #484d4d;
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
+  background: rgba(255, 67, 95, 0.93);
+  cursor: pointer;
+}
+input[type=range].slider::-ms-track {
+  width: 100%;
+  height: 20px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].slider::-ms-fill-lower {
+  background: #323535;
+  border: 0px solid #010101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range].slider::-ms-fill-upper {
+  background: #484d4d;
+  border: 0px solid #010101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range].slider::-ms-thumb {
+  box-shadow: 0px 0px 0px #670000, 0px 0px 0px #810000;
+  border: 1px solid #484d4d;
+  width: 20px;
+  border-radius: 50px;
+  background: rgba(255, 67, 95, 0.93);
+  cursor: pointer;
+  height: 20px;
+}
+input[type=range].slider:focus::-ms-fill-lower {
+  background: #484d4d;
+}
+input[type=range].slider:focus::-ms-fill-upper {
+  background: #5e6565;
+}
+
+
+    </style>
 </head>
 <body>
-	<input type="range" min=1 max=6 value="440" />
-	<input type="range" min=1 max=50 value="440" />
-	<hr/>
-	<input type="range" min=1 max=6 value="440" />
-	<input type="range" min=1 max=50 value="440" />
-	<hr/>
-	<input type="range" min=1 max=6 value="440" />
-	<input type="range" min=1 max=50 value="440" />
-	<hr/>
-	<input type="range" min=1 max=6 value="440" />
-	<input type="range" min=1 max=50 value="440" />
-
-	<br/>
-	<br/>
+	<table>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_0" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_0" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_1" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_1" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_2" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_2" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_3" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_3" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_4" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_4" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+		<tr>
+			<td><input class="slider" id="slider_osc_freq_5" type="range" min=1 max=10 value="1" /></td>
+			<td><input class="slider" id="slider_lfo_freq_5" type="range" min=1 max=10 value="1" /></td>
+		</tr>
+	</table>
 	<input id="btn_play" type="button" value="play" />
 <script>
 
 var combos = [
-    [440/1, 10],
-    [440/2, 5],
-    [440/3, 4],
-    [440/4, 3],
-    [440/5, 2],
-    [440/6, 1]
+    [1, 'sine', 6, 'sine'],
+    [2, 'sine', 5, 'sine'],
+    [3, 'sine', 4, 'sine'],
+    [4, 'sine', 3, 'sine'],
+    [5, 'sine', 2, 'sine'],
+    [6, 'sine', 1, 'sine']
 ];
 
-var lfo_test = function (ctx, freq, lfo_freq) {
-    var lfo = ctx.createOscillator(),
-	    osc = ctx.createOscillator(),
-	    amp = ctx.createGain();
+var LFO = function (ctx, osc_freq, osc_type, lfo_freq, lfo_type) {
+	this.ctx = ctx;
+    this.lfo = ctx.createOscillator(),
+	this.osc = ctx.createOscillator(),
+	this.amp = ctx.createGain();
 
     //set up our oscillator types
-    lfo.type = 'sine';
-    osc.type = 'sine';
+    this.lfo.type = lfo_type || 'sine';
+    this.osc.type = osc_type || 'sine';
 
-    osc.frequency.value = freq;
-    lfo.frequency.value = lfo_freq;
+    this.lfo.frequency.value = lfo_freq;
+    this.osc.frequency.value = 440/osc_freq;
 
     //set the amplitude of the modulation
-    amp.gain.setValueAtTime(1, ctx.currentTime);
+    this.amp.gain.setValueAtTime(1, ctx.currentTime);
 
     //connect the dots
-    lfo.connect(amp.gain);
-    osc.connect(amp).connect(ctx.destination);
+    this.lfo.connect(this.amp.gain);
+    this.osc.connect(this.amp).connect(ctx.destination);
 
-    lfo.start();
-    osc.start();
+    // this.lfo.start();
+    // this.osc.start();
 }
 
-var play = function (combos) {
-	ctx = new AudioContext();
-    combos.map(function(val) {
-        lfo_test(ctx, val[0], val[1]);
+LFO.prototype.set_osc_freq = function(val) {
+    this.osc.frequency.value = 440/val;
+};
+LFO.prototype.set_lfo_freq = function(val) {
+    this.lfo.frequency.value = val;
+};
+LFO.prototype.set_osc_type = function(val) {
+    this.osc.type = val;
+};
+LFO.prototype.set_lfo_type = function(val) {
+    this.lfo.type = val;
+};
+LFO.prototype.start = function() {
+    this.lfo.start();
+    this.osc.start();
+};
+LFO.prototype.stop = function() {
+    this.lfo.stop();
+    this.osc.stop();
+};
+
+var inited = false;
+var playState = false;
+var synths = [];
+var ctx;
+
+var init = function (combos) {
+	if (inited) return;
+	inited = true;
+	var ctx = new AudioContext();
+    combos.map(function(val, idx) {
+    	var synth = new LFO(ctx, val[0], val[1], val[2], val[3]);
+        synths.push(synth);
+        slider_init(idx, synth);
     })
 }
 
+var start = function () {
+	synths.map(function (synth) {
+		synth.start();
+	});
+}
+
+var stop = function () {
+	synths.map(function (synth) {
+		synth.stop();
+	});
+}
+
+
 var btn = document.getElementById("btn_play");
 btn.addEventListener('click', function () {
-	play(combos);
+	init(combos);
+	playState = !playState;
+	if (playState) start();
+	else stop();
 });
+
+var slider_init = function (idx, synth) {
+	var slider_osc_freq = document.getElementById("slider_osc_freq_"+idx);
+	var slider_lfo_freq = document.getElementById("slider_lfo_freq_"+idx);
+
+	slider_osc_freq.value = 440/synth.osc.frequency.value;
+	slider_lfo_freq.value = synth.lfo.frequency.value;
+
+	slider_osc_freq.addEventListener('change', function () {
+		synth.set_osc_freq(parseFloat(this.value, 10));
+	});
+	slider_lfo_freq.addEventListener('change', function () {
+		synth.set_lfo_freq(parseFloat(this.value, 10));
+	});
+}
+
+
+
 
 
 
