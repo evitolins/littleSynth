@@ -8,11 +8,36 @@
     <title>lfo test</title>
     <link rel="stylesheet" href="">
     <style type="text/css">
+html, body {
+	padding: 0;
+	margin: 0;
+}
 body {
 	background: rgb(10,10,10);
 }
 table {
 	width: 100%;
+	height: 100vh;
+}
+td {
+	text-align: center;
+	padding: 1vh;
+}
+input[type=button] {
+	background: transparent;
+	border: 1px #f2455d solid;
+	border-radius: 4px;
+	padding: 6px 12px;
+	color: #f2455d;
+	cursor: pointer;
+}
+input[type=button]:hover {
+	background: #f2455d;
+	color: rgb(10,10,10);
+}
+
+input[type=range] {
+  width: 100%;
 }
 input[type=range].slider {
   -webkit-appearance: none;
@@ -129,8 +154,13 @@ input[type=range].slider:focus::-ms-fill-upper {
 			<td><input class="slider" id="slider_osc_freq_5" type="range" min=1 max=10 value="1" /></td>
 			<td><input class="slider" id="slider_lfo_freq_5" type="range" min=1 max=10 value="1" /></td>
 		</tr>
+		<tr>
+			<td colspan="2"><input class="slider" id="slider_master_volume" type="range" min=0 max=1 value="0.5" step="0.01" /></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input id="btn_play" type="button" value="play" /></td>
+		</tr>
 	</table>
-	<input id="btn_play" type="button" value="play" />
 <script>
 
 var combos = [
@@ -141,8 +171,16 @@ var combos = [
     [5, 'sine', 2, 'sine'],
     [6, 'sine', 1, 'sine']
 ];
+var combos = [
+	[440/110, 'sine', 3, 'sine'],
+	[440/220, 'sine', 5, 'sine'],
+	[440/110, 'sine', 2, 'sine'],
+	[440/110, 'sine', 6, 'sine'],
+	[440/110, 'sine', 4, 'sine'],
+	[440/73.33333587646484, 'sine', 7, 'sine']
+];
 
-var LFO = function (ctx, osc_freq, osc_type, lfo_freq, lfo_type) {
+var LFO = function (ctx, output, osc_freq, osc_type, lfo_freq, lfo_type) {
 	this.ctx = ctx;
     this.lfo = ctx.createOscillator(),
 	this.osc = ctx.createOscillator(),
@@ -155,19 +193,17 @@ var LFO = function (ctx, osc_freq, osc_type, lfo_freq, lfo_type) {
     this.lfo.frequency.value = lfo_freq;
     this.osc.frequency.value = 440/osc_freq;
 
-    //set the amplitude of the modulation
-    this.amp.gain.setValueAtTime(1, ctx.currentTime);
-
     //connect the dots
     this.lfo.connect(this.amp.gain);
-    this.osc.connect(this.amp).connect(ctx.destination);
+    this.osc.connect(this.amp).connect(output);
 
-    // this.lfo.start();
-    // this.osc.start();
+    console.log(output);
+
+    this.lfo.start();
+    this.osc.start();
 }
-
 LFO.prototype.set_osc_freq = function(val) {
-    this.osc.frequency.value = 440/val;
+    this.osc.frequency.value = val;
 };
 LFO.prototype.set_lfo_freq = function(val) {
     this.lfo.frequency.value = val;
@@ -178,29 +214,57 @@ LFO.prototype.set_osc_type = function(val) {
 LFO.prototype.set_lfo_type = function(val) {
     this.lfo.type = val;
 };
+LFO.prototype.set_amp_gain = function(val) {
+    this.amp.gain.setValueAtTime(val, this.ctx.currentTime);
+};
 LFO.prototype.start = function() {
-    this.lfo.start();
-    this.osc.start();
+    this.set_amp_gain(0.1);
+	this.osc.connect(this.amp);
 };
 LFO.prototype.stop = function() {
-    this.lfo.stop();
-    this.osc.stop();
+    this.set_amp_gain(0);
+	this.osc.disconnect(this.amp);
 };
 
-var inited = false;
-var playState = false;
+var is_init = false;
+var is_playing = false;
 var synths = [];
 var ctx;
 
+
+var slider_init = function (idx, synth) {
+	var slider_osc_freq = document.getElementById("slider_osc_freq_"+idx);
+	var slider_lfo_freq = document.getElementById("slider_lfo_freq_"+idx);
+
+	slider_osc_freq.value = 440/synth.osc.frequency.value;
+	slider_lfo_freq.value = synth.lfo.frequency.value;
+
+	slider_osc_freq.addEventListener('input', function () {
+		synth.set_osc_freq(440/parseFloat(this.value, 10));
+	});
+	slider_lfo_freq.addEventListener('input', function () {
+		synth.set_lfo_freq(parseFloat(this.value, 10));
+	});
+}
+
 var init = function (combos) {
-	if (inited) return;
-	inited = true;
+	if (is_init) return;
+	is_init = true;
+
+	console.log('initializing...');
 	var ctx = new AudioContext();
+	var main_volume = ctx.createGain()
+	main_volume.connect(ctx.destination);
+	main_volume.gain.value = 0.5;
+	console.log(main_volume, main_volume.gain);
     combos.map(function(val, idx) {
-    	var synth = new LFO(ctx, val[0], val[1], val[2], val[3]);
+    	var synth = new LFO(ctx, main_volume, val[0], val[1], val[2], val[3]);
         synths.push(synth);
         slider_init(idx, synth);
-    })
+    });
+    document.getElementById('slider_master_volume').addEventListener('input', function () {
+    	main_volume.gain.value = this.value;
+    });
 }
 
 var start = function () {
@@ -215,33 +279,19 @@ var stop = function () {
 	});
 }
 
-
 var btn = document.getElementById("btn_play");
 btn.addEventListener('click', function () {
 	init(combos);
-	playState = !playState;
-	if (playState) start();
-	else stop();
+	is_playing = !is_playing;
+	if (is_playing) {
+		btn.value="pause";
+		start();
+	}
+	else {
+		btn.value="play";
+		stop();
+	}
 });
-
-var slider_init = function (idx, synth) {
-	var slider_osc_freq = document.getElementById("slider_osc_freq_"+idx);
-	var slider_lfo_freq = document.getElementById("slider_lfo_freq_"+idx);
-
-	slider_osc_freq.value = 440/synth.osc.frequency.value;
-	slider_lfo_freq.value = synth.lfo.frequency.value;
-
-	slider_osc_freq.addEventListener('change', function () {
-		synth.set_osc_freq(parseFloat(this.value, 10));
-	});
-	slider_lfo_freq.addEventListener('change', function () {
-		synth.set_lfo_freq(parseFloat(this.value, 10));
-	});
-}
-
-
-
-
 
 
 </script>
