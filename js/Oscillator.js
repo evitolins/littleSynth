@@ -21,17 +21,21 @@ Oscillator.prototype.setType = function (type) {
 };
 
 Oscillator.prototype.play = function () {
-    this.volume.gain.value = 1;
+    this.volume.gain.value = .2;
 };
 
 Oscillator.prototype.stop = function () {
+    //http://alemangui.github.io/blog//2015/12/26/ramp-to-value.html
+    this.volume.gain.setTargetAtTime(0, this.ctx.currentTime, 0.015);
     this.volume.gain.value = 0;
 };
 
 Oscillator.prototype.pulse = function(start, length) {
-    var self = this;
-    setTimeout(function(){
-        self.play();
-        setTimeout(function(){self.stop();}, length || 100);
-    }, start || 0);
+    var fadeSec = 0.005;
+    var curTime = this.ctx.currentTime;
+    // var curTime = timestamp;
+    var startSec = curTime + (start/1000);
+    var endSec = curTime + (start/1000) + (length/1000);
+    this.volume.gain.setTargetAtTime(1.0, startSec, fadeSec);
+    this.volume.gain.setTargetAtTime(0, endSec, fadeSec);
 };

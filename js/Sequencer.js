@@ -13,7 +13,7 @@ Sequencer.prototype.addOscillator = function (freq, type) {
 
 Sequencer.prototype.play = function (sequence) {
     var timePassed = 0,
-        spacer = 20,
+        spacer = 0,
         i,
         ii,
         note,
