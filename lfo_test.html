@@ -1,0 +1,77 @@
+<!-- https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>lfo test</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+	<input type="range" min=1 max=6 value="440" />
+	<input type="range" min=1 max=50 value="440" />
+	<hr/>
+	<input type="range" min=1 max=6 value="440" />
+	<input type="range" min=1 max=50 value="440" />
+	<hr/>
+	<input type="range" min=1 max=6 value="440" />
+	<input type="range" min=1 max=50 value="440" />
+	<hr/>
+	<input type="range" min=1 max=6 value="440" />
+	<input type="range" min=1 max=50 value="440" />
+
+	<br/>
+	<br/>
+	<input id="btn_play" type="button" value="play" />
+<script>
+
+var combos = [
+    [440/1, 10],
+    [440/2, 5],
+    [440/3, 4],
+    [440/4, 3],
+    [440/5, 2],
+    [440/6, 1]
+];
+
+var lfo_test = function (ctx, freq, lfo_freq) {
+    var lfo = ctx.createOscillator(),
+	    osc = ctx.createOscillator(),
+	    amp = ctx.createGain();
+
+    //set up our oscillator types
+    lfo.type = 'sine';
+    osc.type = 'sine';
+
+    osc.frequency.value = freq;
+    lfo.frequency.value = lfo_freq;
+
+    //set the amplitude of the modulation
+    amp.gain.setValueAtTime(1, ctx.currentTime);
+
+    //connect the dots
+    lfo.connect(amp.gain);
+    osc.connect(amp).connect(ctx.destination);
+
+    lfo.start();
+    osc.start();
+}
+
+var play = function (combos) {
+	ctx = new AudioContext();
+    combos.map(function(val) {
+        lfo_test(ctx, val[0], val[1]);
+    })
+}
+
+var btn = document.getElementById("btn_play");
+btn.addEventListener('click', function () {
+	play(combos);
+});
+
+
+
+</script>
+</body>
+</html>
