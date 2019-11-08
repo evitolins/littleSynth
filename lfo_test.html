@@ -50,17 +50,17 @@ input[type=range].slider:focus {
 }
 input[type=range].slider::-webkit-slider-runnable-track {
   width: 100%;
-  height: 20px;
+  height: 10vh;
   cursor: pointer;
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   background: #484d4d;
-  border-radius: 25px;
+  border-radius: 12.5px;
   border: 0px solid #010101;
 }
 input[type=range].slider::-webkit-slider-thumb {
   box-shadow: 0px 0px 0px #670000, 0px 0px 0px #810000;
   border: 1px solid #484d4d;
-  height: 20px;
+  height: 10vh;
   width: 20px;
   border-radius: 50px;
   background: rgba(255, 67, 95, 0.93);
@@ -73,7 +73,7 @@ input[type=range].slider:focus::-webkit-slider-runnable-track {
 }
 input[type=range].slider::-moz-range-track {
   width: 100%;
-  height: 20px;
+  height: 10vh;
   cursor: pointer;
   box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
   background: #484d4d;
@@ -83,7 +83,7 @@ input[type=range].slider::-moz-range-track {
 input[type=range].slider::-moz-range-thumb {
   box-shadow: 0px 0px 0px #670000, 0px 0px 0px #810000;
   border: 1px solid #484d4d;
-  height: 20px;
+  height: 10vh;
   width: 20px;
   border-radius: 50px;
   background: rgba(255, 67, 95, 0.93);
@@ -91,7 +91,7 @@ input[type=range].slider::-moz-range-thumb {
 }
 input[type=range].slider::-ms-track {
   width: 100%;
-  height: 20px;
+  height: 10vh;
   cursor: pointer;
   background: transparent;
   border-color: transparent;
@@ -116,7 +116,7 @@ input[type=range].slider::-ms-thumb {
   border-radius: 50px;
   background: rgba(255, 67, 95, 0.93);
   cursor: pointer;
-  height: 20px;
+  height: 10vh;
 }
 input[type=range].slider:focus::-ms-fill-lower {
   background: #484d4d;
@@ -158,10 +158,65 @@ input[type=range].slider:focus::-ms-fill-upper {
 			<td colspan="2"><input class="slider" id="slider_master_volume" type="range" min=0 max=1 value="0.5" step="0.01" /></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input id="btn_play" type="button" value="play" /></td>
+			<td colspan="2">
+				<input id="btn_play" type="button" value="play" />
+				<br />
+				<input id="btn_note_0" type="button" value="A5" onClick="set_base(880)" />
+				<input id="btn_note_0" type="button" value="G5" onClick="set_base(784)" />
+				<input id="btn_note_0" type="button" value="C5" onClick="set_base(523.26)" />
+				<input id="btn_note_0" type="button" value="A4" onClick="set_base(440)" />
+				<input id="btn_note_1" type="button" value="G4" onClick="set_base(392.00)" />
+				<input id="btn_note_2" type="button" value="C4" onClick="set_base(261.63)" />
+				<input id="btn_note_3" type="button" value="A3" onClick="set_base(220)" />
+			</td>
 		</tr>
 	</table>
 <script>
+
+
+var is_init = false;
+var is_playing = false;
+var synths = [];
+var ctx;
+var BASE_NOTE = 440;
+var notes = {
+   "A2":  110.00,
+  "A#2":  116.54,
+  "Bb2":  116.54,
+   "B2":  123.47,
+   "C3":  130.81,
+  "C#3":  138.59,
+  "Db3":  138.59,
+   "D3":  146.83,
+  "D#3":  155.56,
+  "Eb3":  155.56,
+   "E3":  164.81,
+   "F3":  174.61,
+  "F#3":  185.00,
+  "Gb3":  185.00,
+   "G3":  196.00,
+  "G#3":  207.65,
+  "Ab3":  207.65,
+   "A3":  220.00,
+  "A#3":  233.08,
+  "Bb3":  233.08,
+   "B3":  246.94,
+   "C4":  261.63,
+  "C#4":  277.18,
+  "Db4":  277.18,
+   "D4":  293.66,
+  "D#4":  311.13,
+  "Eb4":  311.13,
+   "E4":  329.63,
+   "F4":  349.23,
+  "F#4":  369.99,
+  "Gb4":  369.99,
+   "G4":  392.00,
+  "G#4":  415.30,
+  "Ab4":  415.30,
+   "A4":  440.00
+};
+
 
 var combos = [
     [1, 'sine', 6, 'sine'],
@@ -191,13 +246,11 @@ var LFO = function (ctx, output, osc_freq, osc_type, lfo_freq, lfo_type) {
     this.osc.type = osc_type || 'sine';
 
     this.lfo.frequency.value = lfo_freq;
-    this.osc.frequency.value = 440/osc_freq;
+    this.osc.frequency.value = BASE_NOTE/osc_freq;
 
     //connect the dots
     this.lfo.connect(this.amp.gain);
     this.osc.connect(this.amp).connect(output);
-
-    console.log(output);
 
     this.lfo.start();
     this.osc.start();
@@ -226,26 +279,54 @@ LFO.prototype.stop = function() {
 	this.osc.disconnect(this.amp);
 };
 
-var is_init = false;
-var is_playing = false;
-var synths = [];
-var ctx;
 
+var update_synths = function () {
+	let b64 = btoa(JSON.stringify(combos))
+	// let json = JSON.parse(atob(b64));
+	// console.log(b64, json);
+
+	window.location.hash = "#"+b64;
+
+	synths.map(function (synth, idx){
+		// console.log(combos, synths);
+		synth.set_osc_freq(get_note(BASE_NOTE, combos[idx][0]));
+		synth.set_lfo_freq(combos[idx][2]);
+	});
+	
+
+};
+
+var set_base = function (base) {
+	BASE_NOTE = base;
+	update_synths();
+};
+
+var get_note = function (base, step) {
+	var note = base/parseFloat(step, 10); 
+	// console.log(base, step, note);
+	return note;
+};
 
 var slider_init = function (idx, synth) {
 	var slider_osc_freq = document.getElementById("slider_osc_freq_"+idx);
 	var slider_lfo_freq = document.getElementById("slider_lfo_freq_"+idx);
 
-	slider_osc_freq.value = 440/synth.osc.frequency.value;
+	slider_osc_freq.value = BASE_NOTE/synth.osc.frequency.value;
 	slider_lfo_freq.value = synth.lfo.frequency.value;
 
 	slider_osc_freq.addEventListener('input', function () {
-		synth.set_osc_freq(440/parseFloat(this.value, 10));
+		combos[idx][0] = parseFloat(this.value, 10);
+		var note = get_note(BASE_NOTE, combos[idx][0]);
+		synth.set_osc_freq(note);
+		update_synths();
 	});
 	slider_lfo_freq.addEventListener('input', function () {
-		synth.set_lfo_freq(parseFloat(this.value, 10));
+		combos[idx][2] = parseFloat(this.value, 10);
+		var note = combos[idx][2]; 
+		synth.set_lfo_freq(note);
+		update_synths();
 	});
-}
+};
 
 var init = function (combos) {
 	if (is_init) return;
@@ -256,7 +337,6 @@ var init = function (combos) {
 	var main_volume = ctx.createGain()
 	main_volume.connect(ctx.destination);
 	main_volume.gain.value = 0.5;
-	console.log(main_volume, main_volume.gain);
     combos.map(function(val, idx) {
     	var synth = new LFO(ctx, main_volume, val[0], val[1], val[2], val[3]);
         synths.push(synth);
@@ -265,6 +345,7 @@ var init = function (combos) {
     document.getElementById('slider_master_volume').addEventListener('input', function () {
     	main_volume.gain.value = this.value;
     });
+    update_synths();
 }
 
 var start = function () {
@@ -292,6 +373,40 @@ btn.addEventListener('click', function () {
 		stop();
 	}
 });
+
+window.addEventListener('load', (event) => {
+  var hash = window.location.hash.substring(1);
+  if (hash) {
+  	combos = JSON.parse(atob(hash));
+  	update_synths();
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  const keyName = event.key;
+
+  if (keyName === 'a') {
+	set_base(880);
+  }
+  if (keyName === 's') {
+	set_base(784);
+  }
+  if (keyName === 'd') {
+	set_base(523.26);
+  }
+  if (keyName === 'f') {
+	set_base(440);
+  }
+  if (keyName === 'g') {
+	set_base(392.00);
+  }
+  if (keyName === 'h') {
+	set_base(261.63);
+  }
+  if (keyName === 'j') {
+	set_base(220);
+  }
+}, false);
 
 
 </script>
