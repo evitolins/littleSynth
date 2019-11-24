@@ -127,6 +127,7 @@ input[type=range].slider:focus::-ms-fill-upper {
 
 
     </style>
+    <script type="text/javascript" src="js/getFrequency.js"></script>
 </head>
 <body>
 	<table>
@@ -161,63 +162,31 @@ input[type=range].slider:focus::-ms-fill-upper {
 			<td colspan="2">
 				<input id="btn_play" type="button" value="play" />
 				<br />
-				<input id="btn_note_0" type="button" value="A5" onClick="set_base(880)" />
-				<input id="btn_note_0" type="button" value="G5" onClick="set_base(784)" />
-				<input id="btn_note_0" type="button" value="C5" onClick="set_base(523.26)" />
-				<input id="btn_note_0" type="button" value="A4" onClick="set_base(440)" />
-				<input id="btn_note_1" type="button" value="G4" onClick="set_base(392.00)" />
-				<input id="btn_note_2" type="button" value="C4" onClick="set_base(261.63)" />
-				<input id="btn_note_3" type="button" value="A3" onClick="set_base(220)" />
+				<input class="note_button" type="button" value="A2" />
+				<input class="note_button" type="button" value="B2" />
+				<input class="note_button" type="button" value="C3" />
+				<input class="note_button" type="button" value="D3" />
+				<input class="note_button" type="button" value="E3" />
+				<input class="note_button" type="button" value="F3" />
+				<input class="note_button" type="button" value="G3" />
+				<input class="note_button" type="button" value="A3" />
+				<input class="note_button" type="button" value="B3" />
+				<input class="note_button" type="button" value="C4" />
+				<input class="note_button" type="button" value="D4" />
+				<input class="note_button" type="button" value="E4" />
+				<input class="note_button" type="button" value="F4" />
+				<input class="note_button" type="button" value="G4" />
+				<input class="note_button" type="button" value="A4" />
 			</td>
 		</tr>
 	</table>
 <script>
-
 
 var is_init = false;
 var is_playing = false;
 var synths = [];
 var ctx;
 var BASE_NOTE = 440;
-var notes = {
-   "A2":  110.00,
-  "A#2":  116.54,
-  "Bb2":  116.54,
-   "B2":  123.47,
-   "C3":  130.81,
-  "C#3":  138.59,
-  "Db3":  138.59,
-   "D3":  146.83,
-  "D#3":  155.56,
-  "Eb3":  155.56,
-   "E3":  164.81,
-   "F3":  174.61,
-  "F#3":  185.00,
-  "Gb3":  185.00,
-   "G3":  196.00,
-  "G#3":  207.65,
-  "Ab3":  207.65,
-   "A3":  220.00,
-  "A#3":  233.08,
-  "Bb3":  233.08,
-   "B3":  246.94,
-   "C4":  261.63,
-  "C#4":  277.18,
-  "Db4":  277.18,
-   "D4":  293.66,
-  "D#4":  311.13,
-  "Eb4":  311.13,
-   "E4":  329.63,
-   "F4":  349.23,
-  "F#4":  369.99,
-  "Gb4":  369.99,
-   "G4":  392.00,
-  "G#4":  415.30,
-  "Ab4":  415.30,
-   "A4":  440.00
-};
-
-
 var combos = [
     [1, 'sine', 6, 'sine'],
     [2, 'sine', 5, 'sine'],
@@ -225,14 +194,6 @@ var combos = [
     [4, 'sine', 3, 'sine'],
     [5, 'sine', 2, 'sine'],
     [6, 'sine', 1, 'sine']
-];
-var combos = [
-	[440/110, 'sine', 3, 'sine'],
-	[440/220, 'sine', 5, 'sine'],
-	[440/110, 'sine', 2, 'sine'],
-	[440/110, 'sine', 6, 'sine'],
-	[440/110, 'sine', 4, 'sine'],
-	[440/73.33333587646484, 'sine', 7, 'sine']
 ];
 
 var LFO = function (ctx, output, osc_freq, osc_type, lfo_freq, lfo_type) {
@@ -282,18 +243,12 @@ LFO.prototype.stop = function() {
 
 var update_synths = function () {
 	let b64 = btoa(JSON.stringify(combos))
-	// let json = JSON.parse(atob(b64));
-	// console.log(b64, json);
-
 	window.location.hash = "#"+b64;
-
 	synths.map(function (synth, idx){
 		// console.log(combos, synths);
 		synth.set_osc_freq(get_note(BASE_NOTE, combos[idx][0]));
 		synth.set_lfo_freq(combos[idx][2]);
 	});
-	
-
 };
 
 var set_base = function (base) {
@@ -360,8 +315,7 @@ var stop = function () {
 	});
 }
 
-var btn = document.getElementById("btn_play");
-btn.addEventListener('click', function () {
+var togglePlayback = function () {
 	init(combos);
 	is_playing = !is_playing;
 	if (is_playing) {
@@ -372,7 +326,21 @@ btn.addEventListener('click', function () {
 		btn.value="play";
 		stop();
 	}
-});
+}
+
+var note_button_listener = function () {
+	if (this.value) {
+		set_base(getFrequency(this.value));
+	}
+};
+
+var classname = document.getElementsByClassName("note_button");
+for (i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', note_button_listener);
+}
+
+var btn = document.getElementById("btn_play");
+btn.addEventListener('click', togglePlayback);
 
 window.addEventListener('load', (event) => {
   var hash = window.location.hash.substring(1);
@@ -384,7 +352,9 @@ window.addEventListener('load', (event) => {
 
 document.addEventListener('keydown', (event) => {
   const keyName = event.key;
-
+  if (keyName === ' ') {
+	togglePlayback();
+  }
   if (keyName === 'a') {
 	set_base(880);
   }
