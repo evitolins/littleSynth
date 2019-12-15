@@ -3,15 +3,32 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>littleSynth demo</title>
     <link rel="stylesheet" href="">
+    <style>
+        .menu {
+            position: absolute;
+            top: 12px;
+            right: 4px;
+        }
+        a.button {
+            font-family: helvetica, "helvetica neue";
+            font-size: 0.8em;
+            border: 1px solid #aaa;
+            padding: 0.25em 1em;
+            border-radius: 2px;
+            background: #eee;
+            margin: 0px;
+        }
+    </style>
 </head>
 <body>
-    <h1>littleSynth Demo</h1>
+    <div class="menu"><a class="button" href="index.html">littleSynth demo</a> <a class="button" href="lfo_test.html">lfo demo</a></div>
+    <h1>littleSynth demo</h1>
     <h2>Basic</h2>
-    <button id='btn1'>Play Single Tone</button>
-    <button id='btn2'>Play Sequence</button>
-    <button id='btn3'>Play Chords</button>
+    <button id='btn1'>Play Sequence A</button>
+    <button id='btn2'>Play Sequence B</button>
+    <button id='btn3'>Play Sequence C w/ Chords</button>
     <br />
 
     <h2>Custom Sequence <span style="font-size:0.7em;">[[noteIdx, milliseconds], ...]</span></h2>
