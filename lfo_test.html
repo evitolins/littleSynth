@@ -78,8 +78,8 @@ var combos = [
 
 var LFO = function (ctx, output, osc_freq, osc_type, lfo_freq, lfo_type) {
 	this.ctx = ctx;
-    this.lfo = ctx.createOscillator(),
-	this.osc = ctx.createOscillator(),
+    this.lfo = ctx.createOscillator();
+	this.osc = ctx.createOscillator();
 	this.amp = ctx.createGain();
 
     //set up our oscillator types
@@ -123,7 +123,7 @@ LFO.prototype.stop = function() {
 
 var update_synths = function () {
 	let b64 = btoa(JSON.stringify(combos))
-	window.location.hash = "#"+b64;
+	window.location.hash = "#" + b64;
 	synths.map(function (synth, idx){
 		// console.log(combos, synths);
 		synth.set_osc_freq(get_note(BASE_NOTE, combos[idx][0]));
@@ -214,9 +214,9 @@ var note_button_listener = function () {
 	}
 };
 
-var classname = document.getElementsByClassName("note_button");
-for (i = 0; i < classname.length; i++) {
-    classname[i].addEventListener('click', note_button_listener);
+var note_button_elems = document.getElementsByClassName("note_button");
+for (i = 0; i < note_button_elems.length; i++) {
+    note_button_elems[i].addEventListener('click', note_button_listener);
 }
 
 var btn = document.getElementById("btn_play");
