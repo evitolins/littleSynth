@@ -153,4 +153,4 @@ elem.btn4.addEventListener('click', function(){
 });
 
 // Add Default Sequence to textarea
-elem.txt1.value = JSON.stringify(sequenceD, null, 2);
+elem.txt1.value = JSON.stringify(sequenceD, null, 4);
